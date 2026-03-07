@@ -1,0 +1,29 @@
+# Compiled files
+*.o
+*.obj
+moc_*.cpp
+moc_*.h
+ui_*.h
+qrc_*.cpp
+
+# Qt build directories
+build/
+build-*/
+debug/
+release/
+
+# Qt Creator files
+*.pro.user
+*.pro.user.*
+*.autosave
+
+# Executable
+HintonMarket
+*.exe
+
+# MacOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
