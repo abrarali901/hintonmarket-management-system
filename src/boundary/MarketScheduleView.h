@@ -5,7 +5,10 @@
 
 class QTableWidget;
 class QPushButton;
+class QLabel;
 class MarketScheduleController;
+class BookingController;
+class WaitlistController;
 class Vendor;
 
 class MarketScheduleView : public QWidget {
@@ -17,23 +20,28 @@ public:
 
     void refreshSchedule();
 
+signals:
+    void backToDashboard();
+
 private slots:
     void onBookClicked();
     void onWaitlistClicked();
+    void onBackClicked();
 
 private:
-    // UI elements
     QTableWidget* m_scheduleTable;
     QPushButton* m_bookButton;
     QPushButton* m_waitlistButton;
+    QPushButton* m_backButton;
+    QLabel* m_statusLabel;
+    QLabel* m_infoLabel;
 
-    // Controller
     MarketScheduleController* m_scheduleController;
+    BookingController* m_bookingController;
+    WaitlistController* m_waitlistController;
 
-    // Current vendor
     Vendor* m_vendor;
 
-    // Setup UI
     void setupUI();
 };
 

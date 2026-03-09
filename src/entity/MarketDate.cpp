@@ -14,21 +14,14 @@ MarketDate::MarketDate(const QDate& date)
 MarketDate::~MarketDate() {
 }
 
-QDate MarketDate::getDate() const {
-    return m_date;
-}
+QDate MarketDate::getDate() const { return m_date; }
 
 QString MarketDate::getDateString() const {
     return m_date.toString("yyyy-MM-dd");
 }
 
-int MarketDate::getMaxFoodStalls() const {
-    return m_maxFoodStalls;
-}
-
-int MarketDate::getMaxArtisanStalls() const {
-    return m_maxArtisanStalls;
-}
+int MarketDate::getMaxFoodStalls() const { return m_maxFoodStalls; }
+int MarketDate::getMaxArtisanStalls() const { return m_maxArtisanStalls; }
 
 int MarketDate::getBookedFoodStalls() const {
     int count = 0;
@@ -58,33 +51,15 @@ int MarketDate::getAvailableArtisanStalls() const {
     return m_maxArtisanStalls - getBookedArtisanStalls();
 }
 
-void MarketDate::setDate(const QDate& date) {
-    m_date = date;
-}
+void MarketDate::setDate(const QDate& date) { m_date = date; }
 
-QVector<StallBooking*>& MarketDate::getBookings() {
-    return m_bookings;
-}
+QVector<StallBooking*>& MarketDate::getBookings() { return m_bookings; }
+void MarketDate::addBooking(StallBooking* booking) { m_bookings.append(booking); }
+void MarketDate::removeBooking(StallBooking* booking) { m_bookings.removeOne(booking); }
 
-void MarketDate::addBooking(StallBooking* booking) {
-    m_bookings.append(booking);
-}
-
-void MarketDate::removeBooking(StallBooking* booking) {
-    m_bookings.removeOne(booking);
-}
-
-QVector<WaitlistEntry*>& MarketDate::getWaitlistEntries() {
-    return m_waitlistEntries;
-}
-
-void MarketDate::addWaitlistEntry(WaitlistEntry* entry) {
-    m_waitlistEntries.append(entry);
-}
-
-void MarketDate::removeWaitlistEntry(WaitlistEntry* entry) {
-    m_waitlistEntries.removeOne(entry);
-}
+QVector<WaitlistEntry*>& MarketDate::getWaitlistEntries() { return m_waitlistEntries; }
+void MarketDate::addWaitlistEntry(WaitlistEntry* entry) { m_waitlistEntries.append(entry); }
+void MarketDate::removeWaitlistEntry(WaitlistEntry* entry) { m_waitlistEntries.removeOne(entry); }
 
 bool MarketDate::hasFoodStallAvailable() const {
     return getAvailableFoodStalls() > 0;

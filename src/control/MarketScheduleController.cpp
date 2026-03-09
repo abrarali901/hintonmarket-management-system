@@ -42,10 +42,8 @@ bool MarketScheduleController::isWithinBookingWindow(MarketDate* date) {
     QDate today = QDate::currentDate();
     QDate marketDate = date->getDate();
 
-    // Must be in the future
     if (marketDate <= today) return false;
 
-    // Must be within 4 weeks
     QDate fourWeeksAhead = today.addDays(28);
     if (marketDate > fourWeeksAhead) return false;
 

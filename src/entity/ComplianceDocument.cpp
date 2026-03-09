@@ -68,8 +68,6 @@ bool ComplianceDocument::isExpired() const {
 }
 
 bool ComplianceDocument::isValidForSeason() const {
-    // Market season ends last Sunday of September
-    // Check if document expires after September 30
     int currentYear = QDate::currentDate().year();
     QDate seasonEnd(currentYear, 9, 30);
     return m_expirationDate > seasonEnd;

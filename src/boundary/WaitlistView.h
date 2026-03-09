@@ -25,21 +25,16 @@ private slots:
     void onLeaveClicked();
 
 private:
-    // UI elements
     QLabel* m_dateLabel;
     QLabel* m_positionLabel;
     QLabel* m_statusLabel;
     QPushButton* m_joinButton;
     QPushButton* m_leaveButton;
 
-    // Controller
     WaitlistController* m_waitlistController;
-
-    // Data
     Vendor* m_vendor;
     MarketDate* m_marketDate;
 
-    // Setup UI
     void setupUI();
     void updatePositionDisplay();
 };

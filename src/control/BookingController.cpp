@@ -5,6 +5,7 @@
 #include "StallBooking.h"
 #include "Notification.h"
 #include "ComplianceDocument.h"
+#include "WaitlistEntry.h"
 
 BookingController::BookingController() {
 }
@@ -15,8 +16,11 @@ BookingController::~BookingController() {
 bool BookingController::bookStall(Vendor* vendor, MarketDate* date) {
     if (!vendor || !date) return false;
 
-    // Check if vendor can book
+    // Check compliance documents
     if (!canVendorBook(vendor)) return false;
+
+    // Business rule: vendors can book only one stall at a time
+    if (!vendor->getBookings().isEmpty()) return false;
 
     // Check availability for vendor's category
     if (vendor->getCategory() == Vendor::VendorCategory::FOOD) {
@@ -25,16 +29,17 @@ bool BookingController::bookStall(Vendor* vendor, MarketDate* date) {
         if (!date->hasArtisanStallAvailable()) return false;
     }
 
+    // Check vendor doesn't already have booking for this date
+    for (StallBooking* existing : vendor->getBookings()) {
+        if (existing->getMarketDate() == date) return false;
+    }
+
     // Create booking
     StallBooking* booking = new StallBooking(vendor, date);
 
-    // Add to DataManager
+    // Add to DataManager, MarketDate, and Vendor
     DataManager::instance().addBooking(booking);
-
-    // Add to MarketDate
     date->addBooking(booking);
-
-    // Add to Vendor
     vendor->addBooking(booking);
 
     // Notify vendor
@@ -48,20 +53,35 @@ bool BookingController::cancelBooking(StallBooking* booking) {
 
     Vendor* vendor = booking->getVendor();
     MarketDate* date = booking->getMarketDate();
+    Vendor::VendorCategory category = vendor->getCategory();
 
-    // Remove from DataManager
+    // Remove from DataManager, MarketDate, and Vendor
     DataManager::instance().removeBooking(booking);
-
-    // Remove from MarketDate
     date->removeBooking(booking);
-
-    // Remove from Vendor
     vendor->removeBooking(booking);
 
-    // Notify vendor
+    // Notify vendor of cancellation
     notifyBookingCancelled(vendor, date);
 
-    // TODO: Trigger waitlist check (WaitlistController)
+    // Trigger waitlist: notify first vendor in queue for this date/category
+    QVector<WaitlistEntry*>& allEntries = date->getWaitlistEntries();
+    WaitlistEntry* firstInQueue = nullptr;
+    for (WaitlistEntry* entry : allEntries) {
+        if (entry->getVendor()->getCategory() == category) {
+            if (!firstInQueue || entry->getPosition() < firstInQueue->getPosition()) {
+                firstInQueue = entry;
+            }
+        }
+    }
+
+    if (firstInQueue) {
+        Vendor* waitVendor = firstInQueue->getVendor();
+        QString message = "A stall is now available for " + date->getDateString() +
+                         "! You are first in the waitlist queue.";
+        Notification* notification = new Notification(
+            Notification::NotificationType::WAITLIST_AVAILABLE, message);
+        waitVendor->addNotification(notification);
+    }
 
     delete booking;
     return true;
@@ -69,11 +89,7 @@ bool BookingController::cancelBooking(StallBooking* booking) {
 
 bool BookingController::canVendorBook(Vendor* vendor) {
     if (!vendor) return false;
-
-    // TODO: Check if vendor has all required compliance documents
-    // Food vendors need 3, Artisan vendors need 2
-
-    return true;
+    return vendor->hasAllComplianceDocuments();
 }
 
 void BookingController::notifyBookingConfirmed(Vendor* vendor, MarketDate* date) {

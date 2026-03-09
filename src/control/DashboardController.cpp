@@ -44,10 +44,9 @@ QVector<Notification*> DashboardController::getUnreadNotifications() {
     QVector<Notification*> unread;
     if (!m_vendor) return unread;
 
-    QVector<Notification*>& notifications = m_vendor->getNotifications();
-    for (Notification* notification : notifications) {
-        if (!notification->isRead()) {
-            unread.append(notification);
+    for (Notification* n : m_vendor->getNotifications()) {
+        if (!n->isRead()) {
+            unread.append(n);
         }
     }
     return unread;

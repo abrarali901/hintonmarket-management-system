@@ -24,7 +24,6 @@ public:
            VendorCategory category);
     ~Vendor();
 
-    // Business info getters
     QString getBusinessName() const;
     QString getEmail() const;
     QString getPhone() const;
@@ -32,29 +31,26 @@ public:
     VendorCategory getCategory() const;
     QString getCategoryString() const;
 
-    // Business info setters
     void setBusinessName(const QString& businessName);
     void setEmail(const QString& email);
     void setPhone(const QString& phone);
     void setAddress(const QString& address);
 
-    // Compliance documents
     QVector<ComplianceDocument*>& getComplianceDocuments();
     void addComplianceDocument(ComplianceDocument* doc);
 
-    // Bookings
     QVector<StallBooking*>& getBookings();
     void addBooking(StallBooking* booking);
     void removeBooking(StallBooking* booking);
 
-    // Waitlist entries
     QVector<WaitlistEntry*>& getWaitlistEntries();
     void addWaitlistEntry(WaitlistEntry* entry);
     void removeWaitlistEntry(WaitlistEntry* entry);
 
-    // Notifications
     QVector<Notification*>& getNotifications();
     void addNotification(Notification* notification);
+
+    bool hasAllComplianceDocuments() const;
 
 private:
     QString m_businessName;

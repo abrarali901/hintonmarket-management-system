@@ -79,7 +79,7 @@ void WaitlistView::onJoinClicked() {
         updatePositionDisplay();
         emit waitlistJoined();
     } else {
-        m_statusLabel->setText("Failed to join waitlist");
+        m_statusLabel->setText("Failed to join waitlist.");
         m_statusLabel->setStyleSheet("color: red;");
         m_statusLabel->show();
     }
@@ -88,9 +88,18 @@ void WaitlistView::onJoinClicked() {
 void WaitlistView::onLeaveClicked() {
     if (!m_vendor || !m_marketDate) return;
 
-    // TODO: Find the WaitlistEntry for this vendor and date
-    // TODO: Call m_waitlistController->leaveWaitlist(entry);
-    // TODO: Update display and emit signal
-
-    emit waitlistLeft();
+    // Find the WaitlistEntry for this vendor and date
+    for (WaitlistEntry* entry : m_vendor->getWaitlistEntries()) {
+        if (entry->getMarketDate() == m_marketDate) {
+            bool success = m_waitlistController->leaveWaitlist(entry);
+            if (success) {
+                m_statusLabel->setText("Left waitlist.");
+                m_statusLabel->setStyleSheet("color: green;");
+                m_statusLabel->show();
+                updatePositionDisplay();
+                emit waitlistLeft();
+            }
+            break;
+        }
+    }
 }

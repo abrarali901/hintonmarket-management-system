@@ -12,8 +12,6 @@ public:
     };
 
     User();
-    // '&' uses the original string
-    // 'const' no modification will happen
     User(const QString& name, const QString& username, UserType type);
     virtual ~User();
 

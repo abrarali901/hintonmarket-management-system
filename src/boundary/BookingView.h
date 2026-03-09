@@ -25,20 +25,15 @@ private slots:
     void onCancelClicked();
 
 private:
-    // UI elements
     QLabel* m_dateLabel;
     QLabel* m_statusLabel;
     QPushButton* m_confirmButton;
     QPushButton* m_cancelButton;
 
-    // Controller
     BookingController* m_bookingController;
-
-    // Data
     Vendor* m_vendor;
     MarketDate* m_marketDate;
 
-    // Setup UI
     void setupUI();
 };
 

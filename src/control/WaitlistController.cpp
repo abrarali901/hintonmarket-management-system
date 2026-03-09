@@ -4,6 +4,7 @@
 #include "MarketDate.h"
 #include "WaitlistEntry.h"
 #include "Notification.h"
+#include <algorithm>
 
 WaitlistController::WaitlistController() {
 }
@@ -14,20 +15,18 @@ WaitlistController::~WaitlistController() {
 bool WaitlistController::joinWaitlist(Vendor* vendor, MarketDate* date) {
     if (!vendor || !date) return false;
 
-    // Get current waitlist for this date and category
+    // Check if already on waitlist for this date
+    for (WaitlistEntry* e : vendor->getWaitlistEntries()) {
+        if (e->getMarketDate() == date) return false;
+    }
+
     QVector<WaitlistEntry*> waitlist = getWaitlistForDate(date, vendor->getCategory());
 
-    // Create entry with position at end of queue
     WaitlistEntry* entry = new WaitlistEntry(vendor, date);
     entry->setPosition(waitlist.size() + 1);
 
-    // Add to DataManager
     DataManager::instance().addWaitlistEntry(entry);
-
-    // Add to MarketDate
     date->addWaitlistEntry(entry);
-
-    // Add to Vendor
     vendor->addWaitlistEntry(entry);
 
     return true;
@@ -40,17 +39,15 @@ bool WaitlistController::leaveWaitlist(WaitlistEntry* entry) {
     MarketDate* date = entry->getMarketDate();
     Vendor::VendorCategory category = vendor->getCategory();
 
-    // Remove from DataManager
     DataManager::instance().removeWaitlistEntry(entry);
-
-    // Remove from MarketDate
     date->removeWaitlistEntry(entry);
-
-    // Remove from Vendor
     vendor->removeWaitlistEntry(entry);
 
     // Update positions for remaining entries
     updatePositions(date, category);
+
+    // Notify next in queue if this was position 1
+    notifyNextInQueue(date, category);
 
     delete entry;
     return true;
@@ -66,14 +63,19 @@ QVector<WaitlistEntry*> WaitlistController::getWaitlistForDate(MarketDate* date,
             result.append(entry);
         }
     }
+
+    // Sort by position
+    std::sort(result.begin(), result.end(), [](WaitlistEntry* a, WaitlistEntry* b) {
+        return a->getPosition() < b->getPosition();
+    });
+
     return result;
 }
 
 int WaitlistController::getPosition(Vendor* vendor, MarketDate* date) {
     if (!vendor || !date) return 0;
 
-    QVector<WaitlistEntry*>& entries = vendor->getWaitlistEntries();
-    for (WaitlistEntry* entry : entries) {
+    for (WaitlistEntry* entry : vendor->getWaitlistEntries()) {
         if (entry->getMarketDate() == date) {
             return entry->getPosition();
         }
@@ -83,27 +85,24 @@ int WaitlistController::getPosition(Vendor* vendor, MarketDate* date) {
 
 void WaitlistController::notifyNextInQueue(MarketDate* date, Vendor::VendorCategory category) {
     QVector<WaitlistEntry*> waitlist = getWaitlistForDate(date, category);
-
     if (waitlist.isEmpty()) return;
 
-    // Find position 1 (first in queue)
-    for (WaitlistEntry* entry : waitlist) {
-        if (entry->getPosition() == 1) {
-            Vendor* vendor = entry->getVendor();
-            QString message = "A stall is now available for " + date->getDateString();
-            Notification* notification = new Notification(
-                Notification::NotificationType::WAITLIST_AVAILABLE, message);
-            vendor->addNotification(notification);
-            break;
-        }
-    }
+    WaitlistEntry* first = waitlist.first();
+    Vendor* vendor = first->getVendor();
+    QString message = "A stall is now available for " + date->getDateString() +
+                     "! You are next in line.";
+    Notification* notification = new Notification(
+        Notification::NotificationType::WAITLIST_AVAILABLE, message);
+    vendor->addNotification(notification);
 }
 
 void WaitlistController::updatePositions(MarketDate* date, Vendor::VendorCategory category) {
     QVector<WaitlistEntry*> waitlist = getWaitlistForDate(date, category);
 
-    // Sort by join time and reassign positions
-    // TODO: Sort waitlist by join time (FIFO)
+    // Sort by join time (FIFO)
+    std::sort(waitlist.begin(), waitlist.end(), [](WaitlistEntry* a, WaitlistEntry* b) {
+        return a->getJoinTime() < b->getJoinTime();
+    });
 
     int position = 1;
     for (WaitlistEntry* entry : waitlist) {

@@ -7,28 +7,32 @@ class QLineEdit;
 class QPushButton;
 class QLabel;
 class AuthenticationController;
+class User;
 
 class LoginView : public QWidget {
-    // Qt marco needed for signals/slots
     Q_OBJECT
 
 public:
     explicit LoginView(QWidget *parent = nullptr);
     ~LoginView();
 
+    void clearFields();
+
+signals:
+    void loginSuccessful(User* user);
+
 private slots:
     void onLoginClicked();
 
 private:
-    // UI elements
     QLineEdit* m_usernameInput;
     QPushButton* m_loginButton;
     QLabel* m_errorLabel;
+    QLabel* m_titleLabel;
+    QLabel* m_helpLabel;
 
-    // Controller
     AuthenticationController* m_authController;
 
-    // Setup UI
     void setupUI();
 };
 

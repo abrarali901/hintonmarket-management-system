@@ -2,8 +2,13 @@ QT += core gui widgets
 
 CONFIG += c++17
 
-TARGET = HintonMarket
+TARGET = HintonMarket2
 TEMPLATE = app
+
+# Include paths for subdirectories
+INCLUDEPATH += src/entity \
+               src/control \
+               src/boundary
 
 # Entity classes
 HEADERS += \
@@ -15,8 +20,8 @@ HEADERS += \
     src/entity/StallBooking.h \
     src/entity/WaitlistEntry.h \
     src/entity/ComplianceDocument.h \
-    src/entity/Notification.h
-    src/entity/DataManager.h \
+    src/entity/Notification.h \
+    src/entity/DataManager.h
 
 SOURCES += \
     src/entity/User.cpp \
@@ -27,8 +32,8 @@ SOURCES += \
     src/entity/StallBooking.cpp \
     src/entity/WaitlistEntry.cpp \
     src/entity/ComplianceDocument.cpp \
-    src/entity/Notification.cpp
-    src/entity/DataManager.cpp \
+    src/entity/Notification.cpp \
+    src/entity/DataManager.cpp
 
 # Control classes
 HEADERS += \
@@ -47,6 +52,7 @@ SOURCES += \
 
 # Boundary classes
 HEADERS += \
+    src/boundary/MainWindow.h \
     src/boundary/LoginView.h \
     src/boundary/MarketScheduleView.h \
     src/boundary/BookingView.h \
@@ -54,6 +60,7 @@ HEADERS += \
     src/boundary/VendorDashboardView.h
 
 SOURCES += \
+    src/boundary/MainWindow.cpp \
     src/boundary/LoginView.cpp \
     src/boundary/MarketScheduleView.cpp \
     src/boundary/BookingView.cpp \
@@ -62,19 +69,3 @@ SOURCES += \
 
 # Main
 SOURCES += src/main.cpp
-```
-
-**What this does:**
-- `QT += core gui widgets` — includes Qt GUI components
-- `CONFIG += c++17` — uses modern C++ (required by course)
-- `TARGET` — your executable name
-- `HEADERS` / `SOURCES` — lists every file to compile (matches your friend's diagram exactly)
-
----
-
-**Next:** Create the folder structure:
-```
-src/
-  entity/
-  control/
-  boundary/

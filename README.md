@@ -1,6 +1,4 @@
 # HintonMarket - Hintonville Farmers Market Management System
-# hintonmarket-management-system
-Farmers market management system built with Qt/C++. Features vendor booking, waitlist queues (FIFO), role-based access, and compliance tracking. Demonstrates OOP design patterns and MVC architecture.
 
 COMP 3004 - Deliverable 1
 
@@ -11,8 +9,8 @@ COMP 3004 - Deliverable 1
 
 ## Build Instructions
 
-1. Open Qt Creator
-2. File -> Open File or Project
+1. Open Qt Creator 6.0.2
+2. File → Open File or Project
 3. Select `HintonMarket.pro`
 4. Click Configure Project
 5. Build → Build Project (Ctrl+B)
@@ -23,40 +21,51 @@ COMP 3004 - Deliverable 1
 ### Vendors (Food)
 | Username | Name | Business |
 |----------|------|----------|
-| foodvendor1 | TODO | TODO |
-| foodvendor2 | TODO | TODO |
-| foodvendor3 | TODO | TODO |
-| foodvendor4 | TODO | TODO |
+| foodvendor1 | Alice Johnson | Alice's Fresh Produce |
+| foodvendor2 | Bob Martinez | Bob's Bakery |
+| foodvendor3 | Clara Nguyen | Clara's Jams & Preserves |
+| foodvendor4 | David Park | David's Organic Juices |
 
 ### Vendors (Artisan)
 | Username | Name | Business |
 |----------|------|----------|
-| artisanvendor1 | TODO | TODO |
-| artisanvendor2 | TODO | TODO |
-| artisanvendor3 | TODO | TODO |
-| artisanvendor4 | TODO | TODO |
+| artisanvendor1 | Emma Wilson | Emma's Handmade Pottery |
+| artisanvendor2 | Frank Chen | Frank's Woodcraft |
+| artisanvendor3 | Grace Lee | Grace's Jewelry Studio |
+| artisanvendor4 | Henry Adams | Henry's Candles & Soaps |
 
 ### Market Operator
 | Username | Name |
 |----------|------|
-| operator1 | TODO |
+| operator1 | Irene Thompson |
 
 ### System Administrator
 | Username | Name |
 |----------|------|
-| admin1 | TODO |
+| admin1 | James Rivera |
 
 ## Features Implemented
 
-- [x] Vendor Identification (Login)
-- [x] Browse Available Market Dates
-- [x] Book a Stall
-- [x] Cancel Stall Booking
-- [x] Place on Waitlist
-- [x] Cancel Waitlist Placement
-- [x] View Vendor Status Dashboard
+- [x] Vendor Identification (Login by username)
+- [x] Browse Available Market Dates (4 weeks)
+- [x] Book a Stall (with compliance checking, one booking at a time)
+- [x] Cancel Stall Booking (with waitlist notification trigger)
+- [x] Place on Waitlist (FIFO queue per category per date)
+- [x] Cancel Waitlist Placement (updates queue positions, notifies next)
+- [x] View Vendor Status Dashboard (business info, compliance, bookings, waitlist, notifications)
+
+## Business Rules Enforced
+
+- Maximum 2 food vendors and 2 artisan vendors per market day
+- Vendors can book only one market stall date at a time
+- Waitlists are organized by vendor category AND by market week (FIFO)
+- When a stall becomes available via cancellation, the first vendor in the waitlist queue is notified
+- Compliance documents must be valid for the entire market season
 
 ## Notes
 
 - All data is stored in memory only
 - Data resets when application restarts
+- Market dates are generated as the next 4 Sundays from the current date
+- Food vendors have 3 compliance documents; Artisan vendors have 2
+- All compliance documents are pre-loaded with valid expiration dates

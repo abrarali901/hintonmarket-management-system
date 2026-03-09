@@ -21,82 +21,54 @@ Vendor::Vendor(const QString& name, const QString& username,
 Vendor::~Vendor() {
 }
 
-QString Vendor::getBusinessName() const {
-    return m_businessName;
-}
-
-QString Vendor::getEmail() const {
-    return m_email;
-}
-
-QString Vendor::getPhone() const {
-    return m_phone;
-}
-
-QString Vendor::getAddress() const {
-    return m_address;
-}
-
-Vendor::VendorCategory Vendor::getCategory() const {
-    return m_category;
-}
+QString Vendor::getBusinessName() const { return m_businessName; }
+QString Vendor::getEmail() const { return m_email; }
+QString Vendor::getPhone() const { return m_phone; }
+QString Vendor::getAddress() const { return m_address; }
+Vendor::VendorCategory Vendor::getCategory() const { return m_category; }
 
 QString Vendor::getCategoryString() const {
     return (m_category == VendorCategory::FOOD) ? "Food" : "Artisan";
 }
 
-void Vendor::setBusinessName(const QString& businessName) {
-    m_businessName = businessName;
-}
+void Vendor::setBusinessName(const QString& businessName) { m_businessName = businessName; }
+void Vendor::setEmail(const QString& email) { m_email = email; }
+void Vendor::setPhone(const QString& phone) { m_phone = phone; }
+void Vendor::setAddress(const QString& address) { m_address = address; }
 
-void Vendor::setEmail(const QString& email) {
-    m_email = email;
-}
+QVector<ComplianceDocument*>& Vendor::getComplianceDocuments() { return m_complianceDocuments; }
+void Vendor::addComplianceDocument(ComplianceDocument* doc) { m_complianceDocuments.append(doc); }
 
-void Vendor::setPhone(const QString& phone) {
-    m_phone = phone;
-}
+QVector<StallBooking*>& Vendor::getBookings() { return m_bookings; }
+void Vendor::addBooking(StallBooking* booking) { m_bookings.append(booking); }
+void Vendor::removeBooking(StallBooking* booking) { m_bookings.removeOne(booking); }
 
-void Vendor::setAddress(const QString& address) {
-    m_address = address;
-}
+QVector<WaitlistEntry*>& Vendor::getWaitlistEntries() { return m_waitlistEntries; }
+void Vendor::addWaitlistEntry(WaitlistEntry* entry) { m_waitlistEntries.append(entry); }
+void Vendor::removeWaitlistEntry(WaitlistEntry* entry) { m_waitlistEntries.removeOne(entry); }
 
-QVector<ComplianceDocument*>& Vendor::getComplianceDocuments() {
-    return m_complianceDocuments;
-}
+QVector<Notification*>& Vendor::getNotifications() { return m_notifications; }
+void Vendor::addNotification(Notification* notification) { m_notifications.append(notification); }
 
-void Vendor::addComplianceDocument(ComplianceDocument* doc) {
-    m_complianceDocuments.append(doc);
-}
-
-QVector<StallBooking*>& Vendor::getBookings() {
-    return m_bookings;
-}
-
-void Vendor::addBooking(StallBooking* booking) {
-    m_bookings.append(booking);
-}
-
-void Vendor::removeBooking(StallBooking* booking) {
-    m_bookings.removeOne(booking);
-}
-
-QVector<WaitlistEntry*>& Vendor::getWaitlistEntries() {
-    return m_waitlistEntries;
-}
-
-void Vendor::addWaitlistEntry(WaitlistEntry* entry) {
-    m_waitlistEntries.append(entry);
-}
-
-void Vendor::removeWaitlistEntry(WaitlistEntry* entry) {
-    m_waitlistEntries.removeOne(entry);
-}
-
-QVector<Notification*>& Vendor::getNotifications() {
-    return m_notifications;
-}
-
-void Vendor::addNotification(Notification* notification) {
-    m_notifications.append(notification);
+bool Vendor::hasAllComplianceDocuments() const {
+    if (m_category == VendorCategory::FOOD) {
+        // Food vendors need 3: Business Licence, Liability Insurance, Food Handler Cert
+        bool hasLicence = false, hasInsurance = false, hasFoodCert = false;
+        for (ComplianceDocument* doc : m_complianceDocuments) {
+            if (!doc->isValidForSeason()) continue;
+            if (doc->getType() == ComplianceDocument::DocumentType::BUSINESS_LICENCE) hasLicence = true;
+            if (doc->getType() == ComplianceDocument::DocumentType::LIABILITY_INSURANCE) hasInsurance = true;
+            if (doc->getType() == ComplianceDocument::DocumentType::FOOD_HANDLER_CERTIFICATION) hasFoodCert = true;
+        }
+        return hasLicence && hasInsurance && hasFoodCert;
+    } else {
+        // Artisan vendors need 2: Business Licence, Liability Insurance
+        bool hasLicence = false, hasInsurance = false;
+        for (ComplianceDocument* doc : m_complianceDocuments) {
+            if (!doc->isValidForSeason()) continue;
+            if (doc->getType() == ComplianceDocument::DocumentType::BUSINESS_LICENCE) hasLicence = true;
+            if (doc->getType() == ComplianceDocument::DocumentType::LIABILITY_INSURANCE) hasInsurance = true;
+        }
+        return hasLicence && hasInsurance;
+    }
 }

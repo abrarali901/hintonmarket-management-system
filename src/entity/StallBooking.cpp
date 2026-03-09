@@ -13,22 +13,9 @@ StallBooking::StallBooking(Vendor* vendor, MarketDate* marketDate)
 StallBooking::~StallBooking() {
 }
 
-Vendor* StallBooking::getVendor() const {
-    return m_vendor;
-}
+Vendor* StallBooking::getVendor() const { return m_vendor; }
+MarketDate* StallBooking::getMarketDate() const { return m_marketDate; }
+QDateTime StallBooking::getBookingTime() const { return m_bookingTime; }
 
-MarketDate* StallBooking::getMarketDate() const {
-    return m_marketDate;
-}
-
-QDateTime StallBooking::getBookingTime() const {
-    return m_bookingTime;
-}
-
-void StallBooking::setVendor(Vendor* vendor) {
-    m_vendor = vendor;
-}
-
-void StallBooking::setMarketDate(MarketDate* marketDate) {
-    m_marketDate = marketDate;
-}
+void StallBooking::setVendor(Vendor* vendor) { m_vendor = vendor; }
+void StallBooking::setMarketDate(MarketDate* marketDate) { m_marketDate = marketDate; }
