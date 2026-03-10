@@ -1,11 +1,16 @@
 # HintonMarket - Hintonville Farmers Market Management System
 
 COMP 3004 - Deliverable 1
+HintonMarket is a stall booking management system for the Hintonville Farmers 
+Market. It supports four user roles: Vendors (Food & Artisan), Market Operators, 
+and System Administrators. The system handles stall bookings, waitlist management, 
+compliance tracking, and vendor notifications across a 4-week market schedule.
 
 ## Team Members
-- [Name 1] - [Student ID]
-- [Name 2] - [Student ID]
-- [Name 3] - [Student ID]
+- Sheng Zhang 101311288
+- Ali Abrar 101308238
+- Osasuyi Uhunmwagho 101301977
+- Victor Okenne 101302320 
 
 ## Build Instructions
 
