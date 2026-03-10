@@ -13,13 +13,13 @@ compliance tracking, and vendor notifications across a 4-week market schedule.
 - Victor Okenne 101302320 
 
 ## Build Instructions
-
 1. Open Qt Creator 6.0.2
-2. File → Open File or Project
-3. Select `HintonMarket.pro`
-4. Click Configure Project
-5. Build → Build Project (Ctrl+B)
-6. Run → Run (Ctrl+R)
+2. **Platform:** Built and tested on Linux
+3. File → Open File or Project
+4. Select `HintonMarket.pro`
+5. Click Configure Project
+6. Build → Build Project (Ctrl+B)
+7. Run → Run (Ctrl+R)
 
 ## Test User Accounts
 
