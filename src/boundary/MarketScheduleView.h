@@ -11,6 +11,11 @@ class BookingController;
 class WaitlistController;
 class Vendor;
 
+/**
+ * @class MarketScheduleView
+ * @brief Market date browsing table with book/waitlist actions.
+ * @author Ali
+ */
 class MarketScheduleView : public QWidget {
     Q_OBJECT
 

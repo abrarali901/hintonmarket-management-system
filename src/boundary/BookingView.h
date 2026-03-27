@@ -9,6 +9,11 @@ class BookingController;
 class Vendor;
 class MarketDate;
 
+/**
+ * @class BookingView
+ * @brief Booking confirmation dialog for a specific market date.
+ * @author Ali
+ */
 class BookingView : public QWidget {
     Q_OBJECT
 

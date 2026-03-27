@@ -9,6 +9,15 @@ class WaitlistEntry;
 class ComplianceDocument;
 class Notification;
 
+/**
+ * @class DashboardController
+ * @brief Provides data for the vendor status dashboard.
+ *
+ * Pulls bookings, waitlist entries, compliance docs and notifications
+ * from the currently logged-in vendor object.
+ *
+ * @author Osasuyi
+ */
 class DashboardController {
 public:
     DashboardController();

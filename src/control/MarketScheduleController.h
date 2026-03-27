@@ -6,6 +6,15 @@
 class MarketDate;
 class Vendor;
 
+/**
+ * @class MarketScheduleController
+ * @brief Provides market date browsing functionality.
+ *
+ * Filters market dates to show only those within the 4-week
+ * booking window. Checks stall availability for a given vendor's category.
+ *
+ * @author Sheng
+ */
 class MarketScheduleController {
 public:
     MarketScheduleController();

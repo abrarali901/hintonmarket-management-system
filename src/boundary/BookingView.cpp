@@ -1,3 +1,4 @@
+// BookingView implementation (Ali)
 #include "BookingView.h"
 #include "BookingController.h"
 #include "Vendor.h"

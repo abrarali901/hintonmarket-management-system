@@ -1,18 +1,21 @@
+// ComplianceDocument implementation (Osasuyi)
 #include "ComplianceDocument.h"
 
 ComplianceDocument::ComplianceDocument()
-    : m_type(DocumentType::BUSINESS_LICENCE), m_documentNumber(""),
+    : m_id(0), m_type(DocumentType::BUSINESS_LICENCE), m_documentNumber(""),
       m_expirationDate(QDate()), m_insuranceProvider("") {
 }
 
 ComplianceDocument::ComplianceDocument(DocumentType type, const QString& documentNumber,
                                        const QDate& expirationDate)
-    : m_type(type), m_documentNumber(documentNumber),
+    : m_id(0), m_type(type), m_documentNumber(documentNumber),
       m_expirationDate(expirationDate), m_insuranceProvider("") {
 }
 
 ComplianceDocument::~ComplianceDocument() {
 }
+
+int ComplianceDocument::getId() const { return m_id; }
 
 ComplianceDocument::DocumentType ComplianceDocument::getType() const {
     return m_type;
@@ -47,9 +50,8 @@ QString ComplianceDocument::getInsuranceProvider() const {
     return m_insuranceProvider;
 }
 
-void ComplianceDocument::setType(DocumentType type) {
-    m_type = type;
-}
+void ComplianceDocument::setId(int id) { m_id = id; }
+void ComplianceDocument::setType(DocumentType type) { m_type = type; }
 
 void ComplianceDocument::setDocumentNumber(const QString& documentNumber) {
     m_documentNumber = documentNumber;

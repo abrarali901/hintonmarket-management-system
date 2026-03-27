@@ -1,3 +1,5 @@
+// VendorDashboardView implementation (Osasuyi)
+// Shows all vendor info: business, compliance, bookings, waitlist, notifications
 #include "VendorDashboardView.h"
 #include "DashboardController.h"
 #include "BookingController.h"

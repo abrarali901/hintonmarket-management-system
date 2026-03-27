@@ -1,5 +1,14 @@
+/**
+ * @file WaitlistController.cpp
+ * @brief Waitlist FIFO queue management with SQLite persistence.
+ *
+ * D2 change: join/leave/position-update ops now persist to DB.
+ *
+ * @author Ali, Osasuyi
+ */
 #include "WaitlistController.h"
 #include "DataManager.h"
+#include "DatabaseManager.h"
 #include "Vendor.h"
 #include "MarketDate.h"
 #include "WaitlistEntry.h"
@@ -21,9 +30,17 @@ bool WaitlistController::joinWaitlist(Vendor* vendor, MarketDate* date) {
     }
 
     QVector<WaitlistEntry*> waitlist = getWaitlistForDate(date, vendor->getCategory());
+    int newPosition = waitlist.size() + 1;
 
+    // Persist to SQLite first
+    int dbId = DatabaseManager::instance().insertWaitlistEntry(
+        vendor->getId(), date->getId(), newPosition);
+    if (dbId < 0) return false;
+
+    // Create in-memory object
     WaitlistEntry* entry = new WaitlistEntry(vendor, date);
-    entry->setPosition(waitlist.size() + 1);
+    entry->setId(dbId);
+    entry->setPosition(newPosition);
 
     DataManager::instance().addWaitlistEntry(entry);
     date->addWaitlistEntry(entry);
@@ -39,6 +56,9 @@ bool WaitlistController::leaveWaitlist(WaitlistEntry* entry) {
     MarketDate* date = entry->getMarketDate();
     Vendor::VendorCategory category = vendor->getCategory();
 
+    // Delete from SQLite first
+    DatabaseManager::instance().deleteWaitlistEntry(entry->getId());
+
     DataManager::instance().removeWaitlistEntry(entry);
     date->removeWaitlistEntry(entry);
     vendor->removeWaitlistEntry(entry);
@@ -46,7 +66,7 @@ bool WaitlistController::leaveWaitlist(WaitlistEntry* entry) {
     // Update positions for remaining entries
     updatePositions(date, category);
 
-    // Notify next in queue if this was position 1
+    // Notify next in queue if applicable
     notifyNextInQueue(date, category);
 
     delete entry;
@@ -93,6 +113,14 @@ void WaitlistController::notifyNextInQueue(MarketDate* date, Vendor::VendorCateg
                      "! You are next in line.";
     Notification* notification = new Notification(
         Notification::NotificationType::WAITLIST_AVAILABLE, message);
+
+    // Persist notification to SQLite
+    int notifId = DatabaseManager::instance().insertNotification(
+        vendor->getId(),
+        static_cast<int>(Notification::NotificationType::WAITLIST_AVAILABLE),
+        message);
+    notification->setId(notifId);
+
     vendor->addNotification(notification);
 }
 
@@ -107,6 +135,8 @@ void WaitlistController::updatePositions(MarketDate* date, Vendor::VendorCategor
     int position = 1;
     for (WaitlistEntry* entry : waitlist) {
         entry->setPosition(position);
+        // Persist updated position to SQLite
+        DatabaseManager::instance().updateWaitlistPosition(entry->getId(), position);
         position++;
     }
 }

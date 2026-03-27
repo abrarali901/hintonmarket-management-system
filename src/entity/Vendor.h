@@ -10,6 +10,15 @@ class StallBooking;
 class WaitlistEntry;
 class Notification;
 
+/**
+ * @class Vendor
+ * @brief Represents a food or artisan vendor in the market.
+ *
+ * Holds business info, compliance documents, bookings, waitlist positions
+ * and notifications. Inherits from User.
+ *
+ * @author Ali
+ */
 class Vendor : public User {
 public:
     enum class VendorCategory {
@@ -24,6 +33,7 @@ public:
            VendorCategory category);
     ~Vendor();
 
+    // Business info getters
     QString getBusinessName() const;
     QString getEmail() const;
     QString getPhone() const;
@@ -31,25 +41,31 @@ public:
     VendorCategory getCategory() const;
     QString getCategoryString() const;
 
+    // Business info setters
     void setBusinessName(const QString& businessName);
     void setEmail(const QString& email);
     void setPhone(const QString& phone);
     void setAddress(const QString& address);
 
+    // Compliance document management
     QVector<ComplianceDocument*>& getComplianceDocuments();
     void addComplianceDocument(ComplianceDocument* doc);
 
+    // Booking management
     QVector<StallBooking*>& getBookings();
     void addBooking(StallBooking* booking);
     void removeBooking(StallBooking* booking);
 
+    // Waitlist management
     QVector<WaitlistEntry*>& getWaitlistEntries();
     void addWaitlistEntry(WaitlistEntry* entry);
     void removeWaitlistEntry(WaitlistEntry* entry);
 
+    // Notification management
     QVector<Notification*>& getNotifications();
     void addNotification(Notification* notification);
 
+    // Checks if vendor has all required documents for their category
     bool hasAllComplianceDocuments() const;
 
 private:

@@ -1,3 +1,4 @@
+// MarketOperator implementation (Victor)
 #include "MarketOperator.h"
 
 MarketOperator::MarketOperator()

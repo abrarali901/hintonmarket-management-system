@@ -5,6 +5,15 @@
 
 class User;
 
+/**
+ * @class AuthenticationController
+ * @brief Handles user login/logout by verifying username against DataManager.
+ *
+ * Not true authentication - just looks up username in the user list
+ * and returns the corresponding User object.
+ *
+ * @author Sheng
+ */
 class AuthenticationController {
 public:
     AuthenticationController();

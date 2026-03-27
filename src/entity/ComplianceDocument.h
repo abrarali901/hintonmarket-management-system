@@ -4,6 +4,16 @@
 #include <QString>
 #include <QDate>
 
+/**
+ * @class ComplianceDocument
+ * @brief Stores compliance document info for a vendor.
+ *
+ * Each vendor needs certain documents to book stalls.
+ * Food vendors: Business Licence, Liability Insurance, Food Handler Cert
+ * Artisan vendors: Business Licence, Liability Insurance
+ *
+ * @author Osasuyi
+ */
 class ComplianceDocument {
 public:
     enum class DocumentType {
@@ -17,6 +27,7 @@ public:
                        const QDate& expirationDate);
     ~ComplianceDocument();
 
+    int getId() const;
     DocumentType getType() const;
     QString getTypeString() const;
     QString getDocumentNumber() const;
@@ -24,15 +35,17 @@ public:
     QString getExpirationDateString() const;
     QString getInsuranceProvider() const;
 
+    void setId(int id);
     void setType(DocumentType type);
     void setDocumentNumber(const QString& documentNumber);
     void setExpirationDate(const QDate& expirationDate);
     void setInsuranceProvider(const QString& provider);
 
     bool isExpired() const;
-    bool isValidForSeason() const;
+    bool isValidForSeason() const;  // checks expiry against Sept 30
 
 private:
+    int m_id;
     DocumentType m_type;
     QString m_documentNumber;
     QDate m_expirationDate;

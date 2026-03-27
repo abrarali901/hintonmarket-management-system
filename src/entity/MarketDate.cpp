@@ -1,19 +1,21 @@
+// MarketDate implementation (Victor)
 #include "MarketDate.h"
 #include "StallBooking.h"
 #include "WaitlistEntry.h"
 #include "Vendor.h"
 
 MarketDate::MarketDate()
-    : m_date(QDate()), m_maxFoodStalls(2), m_maxArtisanStalls(2) {
+    : m_id(0), m_date(QDate()), m_maxFoodStalls(2), m_maxArtisanStalls(2) {
 }
 
 MarketDate::MarketDate(const QDate& date)
-    : m_date(date), m_maxFoodStalls(2), m_maxArtisanStalls(2) {
+    : m_id(0), m_date(date), m_maxFoodStalls(2), m_maxArtisanStalls(2) {
 }
 
 MarketDate::~MarketDate() {
 }
 
+int MarketDate::getId() const { return m_id; }
 QDate MarketDate::getDate() const { return m_date; }
 
 QString MarketDate::getDateString() const {
@@ -51,6 +53,7 @@ int MarketDate::getAvailableArtisanStalls() const {
     return m_maxArtisanStalls - getBookedArtisanStalls();
 }
 
+void MarketDate::setId(int id) { m_id = id; }
 void MarketDate::setDate(const QDate& date) { m_date = date; }
 
 QVector<StallBooking*>& MarketDate::getBookings() { return m_bookings; }

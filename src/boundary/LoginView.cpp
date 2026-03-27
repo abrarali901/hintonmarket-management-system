@@ -1,3 +1,4 @@
+// LoginView implementation (Sheng)
 #include "LoginView.h"
 #include "AuthenticationController.h"
 #include "User.h"

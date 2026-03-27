@@ -9,6 +9,11 @@ class WaitlistController;
 class Vendor;
 class MarketDate;
 
+/**
+ * @class WaitlistView
+ * @brief Waitlist join/leave dialog showing queue position.
+ * @author Osasuyi
+ */
 class WaitlistView : public QWidget {
     Q_OBJECT
 

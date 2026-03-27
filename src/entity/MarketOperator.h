@@ -3,6 +3,11 @@
 
 #include "User.h"
 
+/**
+ * @class MarketOperator
+ * @brief User type for market staff who manage vendor operations.
+ * @author Victor
+ */
 class MarketOperator : public User {
 public:
     MarketOperator();

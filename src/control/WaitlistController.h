@@ -7,6 +7,17 @@
 class MarketDate;
 class WaitlistEntry;
 
+/**
+ * @class WaitlistController
+ * @brief Manages waitlist join/leave and FIFO queue positions.
+ *
+ * Waitlists are per-category per-market-date. When a vendor leaves
+ * or a stall opens up, positions get recalculated and the next
+ * vendor in line is notified.
+ * D2: persists all changes to SQLite via DatabaseManager.
+ *
+ * @author Ali, Osasuyi
+ */
 class WaitlistController {
 public:
     WaitlistController();

@@ -1,3 +1,4 @@
+// WaitlistView implementation (Osasuyi)
 #include "WaitlistView.h"
 #include "WaitlistController.h"
 #include "Vendor.h"

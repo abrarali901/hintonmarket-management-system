@@ -1,7 +1,10 @@
+// MainWindow implementation (Sheng, Victor)
+// Manages QStackedWidget view navigation for all user roles
 #include "MainWindow.h"
 #include "LoginView.h"
 #include "VendorDashboardView.h"
 #include "MarketScheduleView.h"
+#include "OperatorDashboardView.h"
 #include "AuthenticationController.h"
 #include "Vendor.h"
 #include "User.h"
@@ -49,7 +52,7 @@ void MainWindow::setupUI() {
 
     m_stackedWidget->setCurrentIndex(0);
     setWindowTitle("HintonMarket - Hintonville Farmers Market Management System");
-    resize(900, 700);
+    resize(950, 750);
 }
 
 void MainWindow::clearViews() {
@@ -111,31 +114,13 @@ void MainWindow::showMarketSchedule(Vendor* vendor) {
 void MainWindow::showOperatorView() {
     clearViews();
 
-    m_operatorView = new QWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout(m_operatorView);
-
-    QLabel* title = new QLabel("Market Operator View", m_operatorView);
-    title->setStyleSheet("font-size: 18px; font-weight: bold; padding: 20px;");
-    title->setAlignment(Qt::AlignCenter);
-
-    QLabel* info = new QLabel("Market Operator features are not implemented in Deliverable 1.\n"
-                              "D1 focuses on Vendor functionality only.", m_operatorView);
-    info->setAlignment(Qt::AlignCenter);
-    info->setStyleSheet("font-size: 14px; color: #666; padding: 10px;");
-
-    QPushButton* logoutBtn = new QPushButton("Logout", m_operatorView);
-    logoutBtn->setFixedWidth(200);
-    connect(logoutBtn, &QPushButton::clicked, this, &MainWindow::showLogin);
-
-    layout->addStretch();
-    layout->addWidget(title);
-    layout->addWidget(info);
-    layout->addWidget(logoutBtn, 0, Qt::AlignCenter);
-    layout->addStretch();
-
+    m_operatorView = new OperatorDashboardView(this);
     m_stackedWidget->addWidget(m_operatorView);
     m_stackedWidget->setCurrentWidget(m_operatorView);
-    setWindowTitle("HintonMarket - Market Operator");
+
+    connect(m_operatorView, &OperatorDashboardView::logoutRequested, this, &MainWindow::showLogin);
+
+    setWindowTitle("HintonMarket - Market Operator Dashboard");
 }
 
 void MainWindow::showAdminView() {
@@ -148,8 +133,8 @@ void MainWindow::showAdminView() {
     title->setStyleSheet("font-size: 18px; font-weight: bold; padding: 20px;");
     title->setAlignment(Qt::AlignCenter);
 
-    QLabel* info = new QLabel("System Administrator features are not implemented in Deliverable 1.\n"
-                              "D1 focuses on Vendor functionality only.", m_adminView);
+    QLabel* info = new QLabel("System Administrator features are not implemented in Deliverable 2.\n"
+                              "D2 focuses on Market Operator functionality and SQLite persistence.", m_adminView);
     info->setAlignment(Qt::AlignCenter);
     info->setStyleSheet("font-size: 14px; color: #666; padding: 10px;");
 

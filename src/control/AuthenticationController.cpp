@@ -1,3 +1,4 @@
+// AuthenticationController implementation (Sheng)
 #include "AuthenticationController.h"
 #include "DataManager.h"
 #include "User.h"

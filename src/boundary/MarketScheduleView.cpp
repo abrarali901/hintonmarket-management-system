@@ -1,3 +1,5 @@
+// MarketScheduleView implementation (Ali)
+// Displays market dates in a table with book/waitlist buttons
 #include "MarketScheduleView.h"
 #include "MarketScheduleController.h"
 #include "BookingController.h"

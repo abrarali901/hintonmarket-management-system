@@ -1,3 +1,4 @@
+// SystemAdmin implementation (Victor)
 #include "SystemAdmin.h"
 
 SystemAdmin::SystemAdmin()

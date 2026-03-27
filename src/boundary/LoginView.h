@@ -9,6 +9,11 @@ class QLabel;
 class AuthenticationController;
 class User;
 
+/**
+ * @class LoginView
+ * @brief Login screen - verifies username against DataManager.
+ * @author Sheng
+ */
 class LoginView : public QWidget {
     Q_OBJECT
 

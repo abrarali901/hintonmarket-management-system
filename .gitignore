@@ -1,29 +1,23 @@
 # Compiled files
 *.o
-*.obj
-moc_*.cpp
-moc_*.h
-ui_*.h
-qrc_*.cpp
+moc_*
+ui_*
 
-# Qt build directories
-build/
+# Qt Creator
+*.pro.user
+*.pro.user.*
+.qmake.stash
+
+# Build directories
 build-*/
 debug/
 release/
 
-# Qt Creator files
-*.pro.user
-*.pro.user.*
-*.autosave
-
-# Executable
+# Executables
 HintonMarket
-*.exe
+HintonMarket2
 
-# MacOS
+# Local database / OS junk
+*.sqlite3
+hintonMarket.sqlite3
 .DS_Store
-
-# IDE
-.vscode/
-.idea/

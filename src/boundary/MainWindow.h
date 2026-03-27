@@ -7,9 +7,17 @@ class QStackedWidget;
 class LoginView;
 class VendorDashboardView;
 class MarketScheduleView;
+class OperatorDashboardView;
 class AuthenticationController;
 class Vendor;
 
+/**
+ * @class MainWindow
+ * @brief Main application window with QStackedWidget navigation.
+ * Manages view switching: login, vendor dashboard, market schedule,
+ * operator dashboard, and admin placeholder.
+ * @author Sheng, Victor
+ */
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -29,7 +37,7 @@ private:
     LoginView* m_loginView;
     VendorDashboardView* m_dashboardView;
     MarketScheduleView* m_scheduleView;
-    QWidget* m_operatorView;
+    OperatorDashboardView* m_operatorView;
     QWidget* m_adminView;
 
     AuthenticationController* m_authController;

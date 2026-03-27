@@ -1,3 +1,4 @@
+// MarketScheduleController implementation (Sheng)
 #include "MarketScheduleController.h"
 #include "DataManager.h"
 #include "MarketDate.h"
@@ -42,10 +43,10 @@ bool MarketScheduleController::isWithinBookingWindow(MarketDate* date) {
     QDate today = QDate::currentDate();
     QDate marketDate = date->getDate();
 
+    // Only filter out dates that have already passed
+    // Note: booking deadline enforcement (Wednesday 11:59 PM) is
+    // explicitly excluded from the D1/D2 prototype per spec
     if (marketDate <= today) return false;
-
-    QDate fourWeeksAhead = today.addDays(28);
-    if (marketDate > fourWeeksAhead) return false;
 
     return true;
 }

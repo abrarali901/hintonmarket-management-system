@@ -13,6 +13,12 @@ class BookingController;
 class WaitlistController;
 class Vendor;
 
+/**
+ * @class VendorDashboardView
+ * @brief Main vendor dashboard with business info, compliance,
+ * bookings, waitlist, and notifications sections.
+ * @author Osasuyi
+ */
 class VendorDashboardView : public QWidget {
     Q_OBJECT
 
