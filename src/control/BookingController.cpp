@@ -2,6 +2,8 @@
  * @file BookingController.cpp
  * @brief Booking/cancellation logic with SQLite persistence.
  *
+ * D2 change: all book/cancel ops now write to DB via DatabaseManager.
+ * Waitlist notifications are also persisted.
  *
  * @author Ali, Victor
  */
@@ -39,7 +41,7 @@ bool BookingController::bookStall(Vendor* vendor, MarketDate* date) {
         if (existing->getMarketDate() == date) return false;
     }
 
-    // Enforce waitlist priority - if there are vendors waitlisted
+    // D2 Fix: Enforce waitlist priority - if there are vendors waitlisted
     // for this date/category, only the first-in-queue vendor can book.
     // This prevents other vendors from bypassing the waitlist.
     QVector<WaitlistEntry*>& waitEntries = date->getWaitlistEntries();

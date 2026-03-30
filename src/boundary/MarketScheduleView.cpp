@@ -6,6 +6,7 @@
 #include "WaitlistController.h"
 #include "MarketDate.h"
 #include "Vendor.h"
+#include "StallBooking.h"
 
 #include <QTableWidget>
 #include <QTableWidgetItem>
