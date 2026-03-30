@@ -255,8 +255,9 @@ void MarketScheduleView::onWaitlistClicked() {
         return;
     }
 
-    // Check if stalls are actually full (no point in waitlist if available)
-    if (m_scheduleController->hasAvailableStall(date, m_vendor)) {
+    QVector<WaitlistEntry*> existingWaitlist = m_waitlistController->getWaitlistForDate(
+        date, m_vendor->getCategory());
+    if (m_scheduleController->hasAvailableStall(date, m_vendor) && existingWaitlist.isEmpty()) {
         QMessageBox::information(this, "Stalls Available",
             "Stalls are still available for your category on this date.\n"
             "You can book directly instead of joining the waitlist.");
