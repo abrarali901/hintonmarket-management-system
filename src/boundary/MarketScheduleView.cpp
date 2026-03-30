@@ -57,16 +57,6 @@ void MarketScheduleView::setupUI() {
     m_infoLabel->setAlignment(Qt::AlignCenter);
     layout->addWidget(m_infoLabel);
 
-    // Check if vendor has existing booking
-    if (m_vendor && !m_vendor->getBookings().isEmpty()) {
-        QLabel* bookingWarning = new QLabel(
-            "Note: You already have an active booking. Vendors may only book one stall at a time.\n"
-            "Cancel your current booking before booking a new one.", this);
-        bookingWarning->setStyleSheet("font-size: 12px; color: #c0392b; padding: 5px; font-weight: bold;");
-        bookingWarning->setAlignment(Qt::AlignCenter);
-        layout->addWidget(bookingWarning);
-    }
-
     // Table for market dates
     m_scheduleTable = new QTableWidget(this);
     m_scheduleTable->setColumnCount(5);
@@ -188,12 +178,13 @@ void MarketScheduleView::onBookClicked() {
 
     MarketDate* date = dates[row];
 
-    // Check if already have a booking
-    if (!m_vendor->getBookings().isEmpty()) {
-        QMessageBox::warning(this, "Booking Limit",
-            "You already have an active booking. Vendors may only book one stall at a time.\n"
-            "Please cancel your existing booking first.");
-        return;
+    // Check if vendor already has a booking for THIS specific date
+    for (StallBooking* existing : m_vendor->getBookings()) {
+        if (existing->getMarketDate() == date) {
+            QMessageBox::warning(this, "Already Booked",
+                "You already have a booking for " + date->getDateString() + ".");
+            return;
+        }
     }
 
     // Check compliance
@@ -212,6 +203,18 @@ void MarketScheduleView::onBookClicked() {
         return;
     }
 
+    // Check waitlist priority: if others are waitlisted, vendor can't jump the queue
+    int myPos = m_waitlistController->getPosition(m_vendor, date);
+    QVector<WaitlistEntry*> waitlist = m_waitlistController->getWaitlistForDate(
+        date, m_vendor->getCategory());
+    if (!waitlist.isEmpty() && myPos != 1) {
+        // There are waitlisted vendors and this vendor isn't first in line
+        QMessageBox::information(this, "Waitlist Priority",
+            "There are vendors on the waitlist for this date.\n"
+            "Please join the waitlist to get in line for this stall.");
+        return;
+    }
+
     // Confirm booking
     QMessageBox::StandardButton reply = QMessageBox::question(this, "Confirm Booking",
         "Book a stall for " + date->getDate().toString("dddd, yyyy-MM-dd") + "?",
@@ -225,7 +228,8 @@ void MarketScheduleView::onBookClicked() {
             refreshSchedule();
         } else {
             QMessageBox::warning(this, "Booking Failed",
-                "Failed to book the stall. Please check availability and compliance.");
+                "Failed to book the stall. This may be because another\n"
+                "vendor on the waitlist has priority for this date.");
         }
     }
 }

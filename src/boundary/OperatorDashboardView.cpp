@@ -391,12 +391,14 @@ void OperatorDashboardView::onBookStallClicked() {
 
     MarketDate* date = dates[row];
 
-    // Check if vendor already has a booking
-    if (!m_selectedVendor->getBookings().isEmpty()) {
-        QMessageBox::warning(this, "Booking Limit",
-            m_selectedVendor->getBusinessName() +
-            " already has an active booking.\nVendors may only book one stall at a time.");
-        return;
+    // Check if vendor already has a booking for THIS specific date
+    for (StallBooking* existing : m_selectedVendor->getBookings()) {
+        if (existing->getMarketDate() == date) {
+            QMessageBox::warning(this, "Already Booked",
+                m_selectedVendor->getBusinessName() +
+                " already has a booking for " + date->getDateString() + ".");
+            return;
+        }
     }
 
     // Check compliance
@@ -431,7 +433,10 @@ void OperatorDashboardView::onBookStallClicked() {
             refreshAll();
         } else {
             QMessageBox::warning(this, "Booking Failed",
-                "Failed to book the stall. Please check availability and compliance.");
+                "Failed to book the stall. Possible reasons:\n"
+                "- Another vendor on the waitlist has priority\n"
+                "- Compliance documents are incomplete\n"
+                "- No stalls available for this category");
         }
     }
 }

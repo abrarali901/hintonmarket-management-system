@@ -2,8 +2,6 @@
  * @file BookingController.cpp
  * @brief Booking/cancellation logic with SQLite persistence.
  *
- * D2 change: all book/cancel ops now write to DB via DatabaseManager.
- * Waitlist notifications are also persisted.
  *
  * @author Ali, Victor
  */
@@ -29,9 +27,6 @@ bool BookingController::bookStall(Vendor* vendor, MarketDate* date) {
     // Check compliance documents
     if (!canVendorBook(vendor)) return false;
 
-    // Business rule: vendors can book only one stall at a time
-    if (!vendor->getBookings().isEmpty()) return false;
-
     // Check availability for vendor's category
     if (vendor->getCategory() == Vendor::VendorCategory::FOOD) {
         if (!date->hasFoodStallAvailable()) return false;
@@ -39,9 +34,26 @@ bool BookingController::bookStall(Vendor* vendor, MarketDate* date) {
         if (!date->hasArtisanStallAvailable()) return false;
     }
 
-    // Check vendor doesn't already have booking for this date
+    // Check vendor doesn't already have a booking for THIS specific date
     for (StallBooking* existing : vendor->getBookings()) {
         if (existing->getMarketDate() == date) return false;
+    }
+
+    // Enforce waitlist priority - if there are vendors waitlisted
+    // for this date/category, only the first-in-queue vendor can book.
+    // This prevents other vendors from bypassing the waitlist.
+    QVector<WaitlistEntry*>& waitEntries = date->getWaitlistEntries();
+    WaitlistEntry* firstInQueue = nullptr;
+    for (WaitlistEntry* entry : waitEntries) {
+        if (entry->getVendor()->getCategory() == vendor->getCategory()) {
+            if (!firstInQueue || entry->getPosition() < firstInQueue->getPosition()) {
+                firstInQueue = entry;
+            }
+        }
+    }
+    // If a waitlist exists for this category, only the first-in-queue can book
+    if (firstInQueue && firstInQueue->getVendor() != vendor) {
+        return false;
     }
 
     // Persist to SQLite first
@@ -56,6 +68,29 @@ bool BookingController::bookStall(Vendor* vendor, MarketDate* date) {
     DataManager::instance().addBooking(booking);
     date->addBooking(booking);
     vendor->addBooking(booking);
+
+    // If this vendor was on the waitlist, remove them from it automatically
+    if (firstInQueue && firstInQueue->getVendor() == vendor) {
+        // Remove from DB
+        DatabaseManager::instance().deleteWaitlistEntry(firstInQueue->getId());
+        // Remove from in-memory structures
+        DataManager::instance().removeWaitlistEntry(firstInQueue);
+        date->removeWaitlistEntry(firstInQueue);
+        vendor->removeWaitlistEntry(firstInQueue);
+
+        // Update positions for remaining waitlist entries in this category
+        Vendor::VendorCategory cat = vendor->getCategory();
+        int pos = 1;
+        for (WaitlistEntry* e : date->getWaitlistEntries()) {
+            if (e->getVendor()->getCategory() == cat) {
+                e->setPosition(pos);
+                DatabaseManager::instance().updateWaitlistPosition(e->getId(), pos);
+                pos++;
+            }
+        }
+
+        delete firstInQueue;
+    }
 
     // Notify vendor
     notifyBookingConfirmed(vendor, date);
