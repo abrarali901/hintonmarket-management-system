@@ -19,5 +19,5 @@ HintonMarket2
 
 # Local database / OS junk
 *.sqlite3
-hintonMarket.sqlite3
+!hintonMarket.sqlite3
 .DS_Store
